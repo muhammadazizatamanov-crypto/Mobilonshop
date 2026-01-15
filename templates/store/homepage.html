@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+
+{% block title %}Mobilon - Магазин электроники{% endblock %}
+
+{% block content %}
+<!-- Баннер -->
+<div class="hero-banner">
+    <div class="hero-content">
+        <h1>Добро пожаловать в Mobilon</h1>
+        <p>Лучшие цены на электронику и бытовую технику</p>
+        <a href="{% url 'store:product_list' %}" class="btn btn-primary btn-lg">Смотреть товары</a>
+    </div>
+</div>
+
+<!-- Популярные категории -->
+<section class="categories-section">
+    <h2 class="section-title">📦 Популярные категории</h2>
+    <div class="categories-grid">
+        {% for category in categories %}
+            <a href="{% url 'store:category_products' category.id %}" class="category-card">
+                <div class="category-icon">{{ category.icon }}</div>
+                <h3>{{ category.name }}</h3>
+                <span class="product-count">({{ category.product_count }} товаров)</span>
+            </a>
+        {% empty %}
+            <p>Категории не найдены</p>
+        {% endfor %}
+    </div>
+</section>
+
+<!-- Хиты продаж -->
+{% if popular_products %}
+<section class="products-section">
+    <h2 class="section-title">⭐ Хиты продаж</h2>
+    <div class="products-grid">
+        {% for product in popular_products %}
+            {% include "store/product_card.html" %}
+        {% endfor %}
+    </div>
+</section>
+{% endif %}
+
+<!-- Новые товары -->
+{% if new_products %}
+<section class="products-section">
+    <h2 class="section-title">🆕 Новые товары</h2>
+    <div class="products-grid">
+        {% for product in new_products %}
+            {% include "store/product_card.html" %}
+        {% endfor %}
+    </div>
+</section>
+{% endif %}
+
+<!-- Информационный блок -->
+<section class="info-section">
+    <div class="info-card">
+        <h3>✅ Качество гарантировано</h3>
+        <p>Все товары проверены и оригинальны</p>
+    </div>
+    <div class="info-card">
+        <h3>🚚 Быстрая доставка</h3>
+        <p>Доставка по Бишкеку и регионам</p>
+    </div>
+    <div class="info-card">
+        <h3>💬 Помощь 24/7</h3>
+        <p>Свяжитесь с нами по WhatsApp</p>
+    </div>
+</section>
+{% endblock %}

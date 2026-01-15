@@ -1,0 +1,40 @@
+<!-- Карточка товара (используется в списках) -->
+<div class="product-card">
+    {% if product.image %}
+        <div class="product-image">
+            <img src="{{ product.image.url }}" alt="{{ product.name }}" loading="lazy">
+            {% if product.get_discount_percent %}
+                <span class="badge badge-discount">-{{ product.get_discount_percent }}%</span>
+            {% endif %}
+            {% if product.is_popular %}
+                <span class="badge badge-popular">⭐ Популярно</span>
+            {% endif %}
+        </div>
+    {% else %}
+        <div class="product-image placeholder">
+            <span class="placeholder-text">📦 Нет фото</span>
+        </div>
+    {% endif %}
+    
+    <div class="product-info">
+        <h3 class="product-name">
+            <a href="{% url 'store:product_detail' product.pk %}">{{ product.name }}</a>
+        </h3>
+        
+        {% if product.brand %}
+            <p class="product-brand">{{ product.brand }}</p>
+        {% endif %}
+        
+        <div class="product-price">
+            <span class="current-price">{{ product.price }} сом</span>
+            {% if product.old_price %}
+                <span class="old-price">{{ product.old_price }} сом</span>
+            {% endif %}
+        </div>
+        
+        <div class="product-footer">
+            <span class="views-count">👁️ {{ product.views_count }}</span>
+            <a href="{% url 'store:product_detail' product.pk %}" class="btn btn-small btn-primary">Смотреть</a>
+        </div>
+    </div>
+</div>

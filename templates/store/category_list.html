@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% block title %}Все категории - Mobilon{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1>📦 Все категории</h1>
+    <p>Выберите интересующую вас категорию</p>
+</div>
+
+<div class="categories-full-grid">
+    {% for category in categories %}
+        <a href="{% url 'store:category_products' category.id %}" class="category-card-large">
+            <div class="category-icon-large">{{ category.icon }}</div>
+            <h3>{{ category.name }}</h3>
+            <p class="product-count-large">{{ category.product_count }} товаров</p>
+        </a>
+    {% empty %}
+        <p>Категории не найдены</p>
+    {% endfor %}
+</div>
+{% endblock %}

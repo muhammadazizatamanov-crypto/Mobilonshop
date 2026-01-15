@@ -1,0 +1,170 @@
+{% extends "base.html" %}
+
+{% block title %}{{ product.name }} - Mobilon{% endblock %}
+
+{% block content %}
+<div class="breadcrumb">
+    <a href="{% url 'store:homepage' %}">Главная</a> →
+    <a href="{% url 'store:category_products' product.category.id %}">{{ product.category.icon }} {{ product.category.name }}</a> →
+    <span>{{ product.name }}</span>
+</div>
+
+<div class="product-detail-container">
+    <!-- Галерея товара -->
+    <div class="product-gallery">
+        {% if product.image %}
+            <div class="main-image">
+                <img src="{{ product.image.url }}" alt="{{ product.name }}" id="mainImage">
+                {% if discount_percent %}
+                    <span class="discount-badge">-{{ discount_percent }}%</span>
+                {% endif %}
+            </div>
+        {% else %}
+            <div class="main-image placeholder">
+                <span class="placeholder-icon">📦</span>
+                <p>Фото не добавлено</p>
+            </div>
+        {% endif %}
+    </div>
+
+    <!-- Информация о товаре -->
+    <div class="product-details">
+        <div class="product-header">
+            <h1 class="product-title">{{ product.name }}</h1>
+            {% if product.brand %}
+                <p class="product-brand-info">Бренд: <strong>{{ product.brand }}</strong></p>
+            {% endif %}
+            <p class="product-views">👁️ Просмотров: {{ product.views_count }}</p>
+        </div>
+
+        <!-- Цена -->
+        <div class="price-section">
+            <div class="price-display">
+                <span class="current-price">{{ product.price }} сом</span>
+                {% if product.old_price %}
+                    <span class="old-price">{{ product.old_price }} сом</span>
+                    <span class="discount-text">Сэкономите: {{ product.old_price|add:"-"|add:product.price }} сом</span>
+                {% endif %}
+            </div>
+            
+            {% if not product.available %}
+                <div class="status-unavailable">
+                    ❌ Товар временно недоступен
+                </div>
+            {% else %}
+                <div class="status-available">
+                    ✅ В наличии
+                </div>
+            {% endif %}
+        </div>
+
+        <!-- Описание -->
+        {% if product.description %}
+            <div class="description-section">
+                <h3>📝 Описание</h3>
+                <p>{{ product.description|linebreaks }}</p>
+            </div>
+        {% endif %}
+
+        <!-- Блок заказа -->
+        <div class="order-section">
+            <h3>📞 Заказать товар</h3>
+            <p class="order-info">Нажмите на кнопку ниже, и мы откроем чат для оформления заказа</p>
+            
+            <div class="order-buttons">
+                <a href="https://wa.me/{{ whatsapp_number }}?text=Здравствуйте! Хочу заказать {{ product.name }}" 
+                   target="_blank" 
+                   class="btn btn-whatsapp btn-lg">
+                    💚 WhatsApp: {{ phone_number }}
+                </a>
+                <a href="tel:{{ phone_number }}" class="btn btn-phone btn-lg">
+                    📞 Позвонить
+                </a>
+            </div>
+            
+            <p class="order-note">
+                💬 Режим работы: Пн-Пт 9:00-18:00, Сб-Вс 10:00-16:00
+            </p>
+        </div>
+
+        <!-- Характеристики -->
+        <div class="specs-section">
+            <h3>⚙️ Характеристики</h3>
+            <div class="specs-list">
+                <div class="spec-item">
+                    <span class="spec-label">Категория:</span>
+                    <span class="spec-value">{{ product.category.icon }} {{ product.category.name }}</span>
+                </div>
+                {% if product.brand %}
+                    <div class="spec-item">
+                        <span class="spec-label">Бренд:</span>
+                        <span class="spec-value">{{ product.brand }}</span>
+                    </div>
+                {% endif %}
+                <div class="spec-item">
+                    <span class="spec-label">Артикул:</span>
+                    <span class="spec-value">#{{ product.id }}</span>
+                </div>
+                <div class="spec-item">
+                    <span class="spec-label">Наличие:</span>
+                    <span class="spec-value">
+                        {% if product.available %}
+                            <span class="badge badge-success">✅ В наличии</span>
+                        {% else %}
+                            <span class="badge badge-danger">❌ Недоступен</span>
+                        {% endif %}
+                    </span>
+                </div>
+                <div class="spec-item">
+                    <span class="spec-label">Дата добавления:</span>
+                    <span class="spec-value">{{ product.created_at|date:"d.m.Y" }}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Похожие товары -->
+{% if similar_products %}
+    <section class="similar-products-section">
+        <h2 class="section-title">Похожие товары</h2>
+        <div class="products-grid">
+            {% for product in similar_products %}
+                {% include "store/product_card.html" %}
+            {% endfor %}
+        </div>
+    </section>
+{% endif %}
+
+<!-- Информационный блок -->
+<section class="info-block">
+    <div class="info-item">
+        <span class="icon">✅</span>
+        <div>
+            <h4>100% Оригинальные</h4>
+            <p>Все товары сертифицированы</p>
+        </div>
+    </div>
+    <div class="info-item">
+        <span class="icon">🚚</span>
+        <div>
+            <h4>Быстрая доставка</h4>
+            <p>Доставка по городу за 1-2 дня</p>
+        </div>
+    </div>
+    <div class="info-item">
+        <span class="icon">💰</span>
+        <div>
+            <h4>Лучшие цены</h4>
+            <p>Гарантированно самые низкие цены</p>
+        </div>
+    </div>
+    <div class="info-item">
+        <span class="icon">💬</span>
+        <div>
+            <h4>Поддержка 24/7</h4>
+            <p>Помощь по WhatsApp и телефону</p>
+        </div>
+    </div>
+</section>
+{% endblock %}

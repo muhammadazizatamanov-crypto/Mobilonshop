@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+
+{% block title %}Все товары - Mobilon{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1>📦 Все товары</h1>
+    <p>Выберите нужный товар или используйте фильтры</p>
+</div>
+
+<!-- Фильтры и поиск -->
+<div class="filters-section">
+    <form method="get" class="filters-form">
+        <div class="filter-group">
+            <input 
+                type="text" 
+                name="search" 
+                placeholder="Поиск по названию или бренду..." 
+                value="{{ search_query }}"
+                class="filter-input"
+            >
+        </div>
+        
+        <div class="filter-group">
+            <select name="category" class="filter-select">
+                <option value="">Все категории</option>
+                {% for category in categories %}
+                    <option value="{{ category.id }}" {% if selected_category|add:"0" == category.id|add:"0" %}selected{% endif %}>
+                        {{ category.icon }} {{ category.name }}
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+        
+        <button type="submit" class="btn btn-primary">🔍 Найти</button>
+        {% if search_query or selected_category %}
+            <a href="{% url 'store:product_list' %}" class="btn btn-secondary">Сбросить</a>
+        {% endif %}
+    </form>
+</div>
+
+<!-- Список товаров -->
+<div class="products-section">
+    {% if products %}
+        <p class="results-info">Найдено товаров: <strong>{{ products.count }}</strong></p>
+        <div class="products-grid">
+            {% for product in products %}
+                {% include "store/product_card.html" %}
+            {% empty %}
+                <p class="no-results">Товары не найдены 😔</p>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="empty-state">
+            <p class="empty-icon">🔍</p>
+            <h2>Товары не найдены</h2>
+            <p>Попробуйте изменить параметры поиска</p>
+            <a href="{% url 'store:product_list' %}" class="btn btn-primary">Просмотреть все товары</a>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

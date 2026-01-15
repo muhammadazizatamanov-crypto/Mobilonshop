@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Mobilon - Магазин электроники{% endblock %}</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/style.css">
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+    <!-- Заголовок с контактами -->
+    <header class="header-top">
+        <div class="container">
+            <div class="header-contacts">
+                <div class="contact-item">
+                    <span class="icon">📞</span>
+                    <a href="tel:+996550179400">0550 179 400</a>
+                </div>
+                <div class="contact-item">
+                    <span class="icon">💬</span>
+                    <a href="https://wa.me/996550179400" target="_blank">WhatsApp</a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Навигация -->
+    <nav class="navbar">
+        <div class="container">
+            <div class="nav-brand">
+                <a href="{% url 'store:homepage' %}">
+                    <span class="logo-icon">📱</span>
+                    <span class="logo-text">Mobilon</span>
+                </a>
+            </div>
+            
+            <ul class="nav-menu">
+                <li><a href="{% url 'store:homepage' %}" class="nav-link">Главная</a></li>
+                <li><a href="{% url 'store:product_list' %}" class="nav-link">Все товары</a></li>
+                <li class="nav-item dropdown">
+                    <a href="{% url 'store:category_list' %}" class="nav-link">Категории ▼</a>
+                    <ul class="dropdown-menu">
+                        {% for category in categories %}
+                            <li><a href="{% url 'store:category_products' category.id %}">{{ category.icon }} {{ category.name }}</a></li>
+                        {% endfor %}
+                    </ul>
+                </li>
+            </ul>
+
+            <form class="search-form" action="{% url 'store:product_list' %}" method="get">
+                <input type="text" name="search" placeholder="Поиск товара..." value="{{ search_query }}">
+                <button type="submit" class="btn-search">🔍</button>
+            </form>
+        </div>
+    </nav>
+
+    <!-- Основной контент -->
+    <main class="main">
+        <div class="container">
+            {% block content %}{% endblock %}
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-section">
+                <h3>O магазине</h3>
+                <p>Mobilon - ваш надежный интернет-магазин электроники и бытовой техники.</p>
+            </div>
+            <div class="footer-section">
+                <h3>Контакты</h3>
+                <p>📞 Телефон: <a href="tel:+996550179400">0550 179 400</a></p>
+                <p>💬 WhatsApp: <a href="https://wa.me/996550179400" target="_blank">+996 550 179 400</a></p>
+            </div>
+            <div class="footer-section">
+                <h3>Режим работы</h3>
+                <p>Пн-Чт: 9:00 - 18:00</p>
+                <p>Пт-Вс: 10:00 - 16:00</p>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 Mobilon. Все права защищены.</p>
+        </div>
+    </footer>
+
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+
+{% block title %}{{ category.name }} - Mobilon{% endblock %}
+
+{% block content %}
+<div class="category-header">
+    <div class="category-header-content">
+        <span class="category-icon-large">{{ category.icon }}</span>
+        <h1>{{ category.name }}</h1>
+        <p>{{ category.product_count }} товаров</p>
+    </div>
+</div>
+
+<!-- Поиск в категории -->
+<div class="filters-section">
+    <form method="get" class="filters-form">
+        <div class="filter-group">
+            <input 
+                type="text" 
+                name="search" 
+                placeholder="Поиск в этой категории..." 
+                value="{{ search_query }}"
+                class="filter-input"
+            >
+        </div>
+        <button type="submit" class="btn btn-primary">🔍 Найти</button>
+        {% if search_query %}
+            <a href="{% url 'store:category_products' category.id %}" class="btn btn-secondary">Сбросить</a>
+        {% endif %}
+    </form>
+</div>
+
+<!-- Товары категории -->
+<div class="products-section">
+    {% if products %}
+        <p class="results-info">Найдено товаров: <strong>{{ products.count }}</strong></p>
+        <div class="products-grid">
+            {% for product in products %}
+                {% include "store/product_card.html" %}
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="empty-state">
+            <p class="empty-icon">📭</p>
+            <h2>Товары не найдены</h2>
+            <p>В этой категории нет товаров</p>
+            <a href="{% url 'store:category_list' %}" class="btn btn-primary">Вернуться к категориям</a>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}
